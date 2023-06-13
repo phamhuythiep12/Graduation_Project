@@ -16,7 +16,7 @@ $all_users = $conn -> query($sql);
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <title>Manage Users</title>
+    <title>Manage Students</title>
 </head>
 <body>
     <nav>
@@ -29,7 +29,7 @@ $all_users = $conn -> query($sql);
                     </div>
                     <ul>
                         <li><a href="dashboard.php">Dashboard</a></li>
-                        <li><a href="signin.php">Log Out</a></li>
+                        <li><a href="signin_admin.php">Log Out</a></li>
                     </ul>
                 </li>
             </ul>
@@ -63,19 +63,29 @@ $all_users = $conn -> query($sql);
                     </li>
                     <li>
                         <a href="add-user.php"><i class="uil uil-user-plus"></i>
-                        <h5>Add User</h5>
+                        <h5>Add Student</h5>
                         </a>
                     </li>
                     <li>
                         <a href="manage-users.php" class="active"><i class="uil uil-users-alt"></i>
-                        <h5>Manage User</h5>
+                        <h5>Manage Student</h5>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="rank-users.php"><i class="uil uil-users-alt"></i>
+                        <h5>Ranking Student</h5>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="stream_record_lesson.php"><i class="uil uil-video"></i>
+                        <h5>Streamming and Recording</h5>
                         </a>
                     </li>
                 </ul>
             </aside>
 
             <main>
-                <h2>Manage Users</h2>
+                <h2>Manage Students</h2>
                 <table>
                     <thead>
                         <tr>

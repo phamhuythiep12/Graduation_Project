@@ -13,7 +13,7 @@ if (isset($_POST['submit'])) {
     $user_lastname = mysqli_real_escape_string($conn, $_POST['user_lastname']);
     $user_name = mysqli_real_escape_string($conn, $_POST['username']);
     $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
-    $user_password = mysqli_real_escape_string($conn, $_POST['user_password']);
+    $user_password = md5(mysqli_real_escape_string($conn, $_POST['user_password']));
 
 
     // Check if user uploaded a new avatar

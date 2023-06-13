@@ -235,8 +235,7 @@ if (isset($_POST['submit'])) {
         ?>
             <input type="file" id="videoLink" name="lesson_video_url" >
 
-            <label for="quizzizquest"><h5>Link Quiz:</h5></label>
-            <input type="text" id="quizzizquest" name="lesson_quiz" value="<?php echo $row['lesson_quiz']; ?>">
+            
 
 
             <label for="flashcardContainer"><h5>Lesson Flashcard:</h5></label>

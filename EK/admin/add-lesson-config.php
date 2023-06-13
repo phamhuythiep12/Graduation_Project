@@ -58,8 +58,8 @@ if(isset($_POST['submit'])){
     }
 
     // Insert lesson into database
-    $sql = "INSERT INTO `lesson_db` (lesson_name, lesson_image_url, lesson_quiz, lesson_video_url) 
-            VALUES ('$lesson_name', '$lesson_image_new_name', '$lesson_quiz', '$new_video_name')";
+    $sql = "INSERT INTO `lesson_db` (lesson_name, lesson_image_url, lesson_video_url) 
+            VALUES ('$lesson_name', '$lesson_image_new_name', '$new_video_name')";
 
     if ($conn->query($sql) === TRUE) {
         //echo "<script>alert('Lesson added successfully!')</script>";

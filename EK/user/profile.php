@@ -3,9 +3,26 @@
     session_start();
     $username = $_SESSION["username"];
             
-    $query = "SELECT * FROM `user_db` WHERE username='$username'";
-    $result = mysqli_query($conn, $query);
-    $row = mysqli_fetch_assoc($result);
+    $query = "SELECT * FROM user_db WHERE username = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('s', $username);
+    $stmt->execute();
+
+    // Get the result
+    $result = $stmt->get_result();
+
+    // Check if a row was found
+    if ($result->num_rows > 0) {
+        // Fetch the row as an associative array
+        $row = $result->fetch_assoc();
+
+        // Retrieve the user ID from the row
+        $userIdFromDB = $row['user_id'];
+        $userNameFromDB = $row['username'];
+    }
+
+    $sql_all_flashcards = "SELECT * FROM lesson_learned WHERE user_id = '$userIdFromDB'";
+    $all_flashcards = $conn -> query($sql_all_flashcards);
 ?>
 
 
@@ -23,11 +40,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <?php
-        if(isset($_SESSION["username"])){
-            echo "<title>Welcome, {$_SESSION['username']}</title>";        
-        }
+            echo "<title>Welcome, {$row['username']}</title>";        
     ?>
     <style>
+        .form__section{
+            margin-bottom: 400px;
+        }
         
         #imagePreview {
             width: 200px;
@@ -36,6 +54,69 @@
             margin-bottom: 20px;
             background-size: cover;
             background-position: center;
+        }
+        .flashcard {
+        width: 150px;
+        height: 200px;
+        display: inline-block;
+        margin-right: 60px;
+        margin-bottom: 20px;
+        perspective: 1000px;
+        padding-left: 50px;
+        
+        border-radius: 5px;
+        }
+
+        .flashcard:hover .front {
+        transform: rotateY(-180deg);
+        }
+
+        .flashcard:hover .back {
+        transform: rotateY(0deg);
+        }
+
+        .front, .back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        transition: transform 0.5s ease-in-out;
+        }
+
+        .front {
+        transform: rotateY(0deg);
+        }
+
+        .back {
+        transform: rotateY(180deg);
+        border: 1px solid white;
+        background-color: white;
+        }
+
+        .back p {
+            font-size: 30px;
+            margin-top: 150px;
+            text-align: center;
+            color: #222;
+        }
+
+        .flashcard img {
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
+        object-fit: cover;
+        }
+
+        
+        @media screen and (max-width: 1024px) {
+            .form__section{
+            margin-bottom: 800px;
+            }
+        }
+        @media screen and (max-width: 600px) {
+            .form__section{
+            margin-bottom: 2500px;
+            }
         }
     </style>
 </head>
@@ -46,7 +127,7 @@
             <ul class="nav__menu">
                 <li><a href="course.php">Home</a></li>
                 <li><a href="course.php">Topics</a></li>
-                <li><a href="contact.php">Contact</a></li>
+                <li><a href="ranking.php">Ranking</a></li>
                 <li><a href="signin.php">Log Out</a></li>
 
             </ul>
@@ -60,10 +141,7 @@
     <section class="form__section">
     <div class="container form__section-container">
         <?php
-                if(isset($_SESSION["username"])){
-                    echo "<h2>Welcome, {$_SESSION['username']}</h2>";
-                    
-                }
+                    echo "<h2>Welcome, {$row['username']}</h2>";
                 ?>
                 
                 <form action="" method="POST" enctype="multipart/form-data">
@@ -84,6 +162,23 @@
                     
             </form>
         </div>
+        <div class = "flashcard-container">
+                <h3 style='padding-left:50px; padding-bottom:30px;'>Collections:</h3>
+                <?php
+                while ($row_all_flashcards = mysqli_fetch_assoc($all_flashcards)) {
+                echo "
+                <div class='flashcard'>
+                    <div class='front'>
+                        <img src='../admin/flashcards/{$row_all_flashcards['front_flashcard_url']}' alt='image'>
+                    </div>
+                    <div class='back'>
+                        <p id='word'>{$row_all_flashcards['back_flashcard_text']}</p>
+                    </div>
+                </div>";
+                }
+                ?>
+                
+            </div>
     </section>
     
 

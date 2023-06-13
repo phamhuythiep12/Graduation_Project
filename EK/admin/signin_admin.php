@@ -1,30 +1,30 @@
 <?php
-            include "../db_conn.php";
-            session_start();
-            if(isset($_POST['submit'])){
-                $username = $_POST['username'];        
-                $password = ($_POST['password']);        
-        
-                $select = mysqli_query($conn, "SELECT * FROM `admin_db` WHERE `username`= '$username'") or die('query failed');
-                if(mysqli_num_rows($select)>0){
-                  $row = mysqli_fetch_assoc($select);
-                  $_SESSION['id'] = $row['id'];
-                  header('location:dashboard.php');
-                }else{
-                    echo "<h5>No user found!</h5>";
-                  //$message[] = 'INCORRECT USERNAME OR PASSWORD!';
+    include "../db_conn.php";
+    session_start();
+
+    if (isset($_POST['submit'])) {
+        $username = mysqli_real_escape_string($conn, $_POST["username"]);
+        $password = mysqli_real_escape_string($conn, $_POST["password"]);
+
+        // Validate username and password
+            $select = mysqli_query($conn, "SELECT * FROM `admin_db` WHERE `username` = '$username'") or die('query failed');
+            if (mysqli_num_rows($select) > 0) {
+                $row = mysqli_fetch_assoc($select);
+                $hashedPassword = md5($password); // Encrypt the password with MD5
+
+                if ($row['password'] === $hashedPassword) {
+                    $_SESSION['id'] = $row['id'];
+                    header('location: dashboard.php');
+                } else {
+                    echo "<script>alert('Incorrect password!')</script>";
                 }
-                   /*$row = mysqli_fetch_assoc($select);
-                   if($row){
-                    foreach($row as $key => $value){
-                        echo "$key: $value<br>";
-                    }
-                   }else{
-                    echo "No matching record";
-                   }*/
+            } else {
+                echo "<script>alert('No user found')</script>";
             }
-            
-    ?>
+        
+    }
+?>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -55,9 +55,9 @@
             <h2>Sign In</h2>
             
             <form action="" method="POST" enctype="multipart/form-data">
-                <input type="text" placeholder="Username" name="username">
+                <input type="text" placeholder="Username" name="username" required>
                 
-                <input type="password" placeholder="Password" name ="password">
+                <input type="password" placeholder="Password" name ="password" required>
                 <button type="submit" class="btn btn-primary" name="submit">Sign In</button>
                 
             </form>

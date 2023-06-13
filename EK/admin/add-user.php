@@ -119,7 +119,7 @@ if (isset($_POST['submit'])) {
                     </div>
                     <ul>
                         <li><a href="dashboard.php">Dashboard</a></li>
-                        <li><a href="signin.php">Log Out</a></li>
+                        <li><a href="signin_admin.php">Log Out</a></li>
                     </ul>
                 </li>
             </ul>
@@ -133,7 +133,7 @@ if (isset($_POST['submit'])) {
     <!--End nav-->
     <section class="form__section">
         <div class="container form__section-container">
-            <h2>Add User</h2>
+            <h2>Add Student</h2>
             
             <form action="" method="POST" enctype="multipart/form-data">
                 <input type="text" placeholder="First Name" name="firstname">

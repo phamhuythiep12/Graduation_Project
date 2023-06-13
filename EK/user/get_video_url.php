@@ -17,6 +17,18 @@ if (isset($_GET['learn'])) {
             <source src='../admin/uploads/{$row['lesson_video_url']}' type='video/mp4'>
         </video>";
   echo "<h3>{$row['lesson_name']}</h3>";
+
+  echo" <div class='right-sidebar' id='lesson_list'>
+                    <a href='lesson_play.php?learn={$row_display['lesson_id']}'>
+                    
+                    <div class='side-video-list'>
+                        <img src='../admin/uploadsImageLesson/{$row_display['lesson_image_url']}' alt=''>
+                        <div class='vid-info'>
+                        <strong>{$row_display['lesson_name']}</strong>      
+                        </div>
+                    </div>
+                    </a>  
+                    ";
 } else {
   echo "Error: Lesson ID not found.";
 }

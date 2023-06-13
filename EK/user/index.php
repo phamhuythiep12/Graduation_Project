@@ -20,6 +20,7 @@
             <a href="index.php"><h4>EK</h4></a>
             <ul class="nav__menu">
                 <li><a href="#header">Home</a></li>
+                <li><a href="games.php">Games</a></li>
                 <li><a href="#courses">Topics</a></li>
                 <li><a href="contact.php">Contact</a></li>
                 <li><a href="signin.php">Sign In</a></li>

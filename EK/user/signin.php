@@ -4,7 +4,7 @@
       
       if(isset($_POST['submit'])){
         $username = $_POST['username'];        
-        $password = ($_POST['user_password']);        
+        $password = md5($_POST['user_password']);        
 
         $select = mysqli_query($conn, "SELECT * FROM `user_db` WHERE username='$username' AND user_password='$password'") or die('query failed');
         if(mysqli_num_rows($select)>0){

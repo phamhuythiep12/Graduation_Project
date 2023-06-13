@@ -7,8 +7,8 @@ if (isset($_POST['submit'])) {
     $lastname = mysqli_real_escape_string($conn, $_POST["user_lastname"]);
     $username = mysqli_real_escape_string($conn, $_POST["username"]);
     $user_email = mysqli_real_escape_string($conn, $_POST["user_email"]);
-    $user_password = mysqli_real_escape_string($conn, $_POST["user_password"]);
-    $confirm_password = mysqli_real_escape_string($conn, $_POST["confirm_password"]);
+    $user_password = md5(mysqli_real_escape_string($conn, $_POST["user_password"]));
+    $confirm_password = md5(mysqli_real_escape_string($conn, $_POST["confirm_password"]));
     $user_avatar = $_FILES["user_avatar"]["name"];
     $user_avatar_tmp = $_FILES["user_avatar"]["tmp_name"];
 

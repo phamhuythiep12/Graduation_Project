@@ -69,6 +69,3 @@ passwordInput.addEventListener("input", () => {
 });
 
 
-const lessonList = document.querySelector('#lesson-list');
-const sideVideoList = document.querySelector('.side-video-list');
-lessonList.appendChild(sideVideoList);

@@ -16,7 +16,7 @@
 <body>
     <nav>
         <div class="container nav__container">
-            <a href="dashboard.html" class="nav__logo">EK</a>
+            <a href="dashboard.php" class="nav__logo">EK</a>
             <ul class="nav__items">
                 <li class="nav__profile">
                     <div class="avatar">
@@ -24,7 +24,7 @@
                     </div>
                     <ul>
                         <li><a href="dashboard.php">Dashboard</a></li>
-                        <li><a href="signin.php">Log Out</a></li>
+                        <li><a href="signin_admin.php">Log Out</a></li>
                     </ul>
                 </li>
             </ul>
@@ -59,12 +59,22 @@
                     </li>
                     <li>
                         <a href="add-user.php"><i class="uil uil-user-plus"></i>
-                        <h5>Add User</h5>
+                        <h5>Add Student</h5>
                         </a>
                     </li>
                     <li>
                         <a href="manage-users.php"><i class="uil uil-users-alt"></i>
-                        <h5>Manage User</h5>
+                        <h5>Manage Student</h5>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="rank-users.php"><i class="uil uil-users-alt"></i>
+                        <h5>Ranking Student</h5>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="stream_record_lesson.php"><i class="uil uil-video"></i>
+                        <h5>Streamming and Recording</h5>
                         </a>
                     </li>
                 </ul>

@@ -2,27 +2,42 @@
 include "../db_conn.php";
 
 if (isset($_POST['submit'])) {
-    $username = $_POST['username'];
-    $password = md5($_POST['password']);
+    $username = mysqli_real_escape_string($conn, $_POST["username"]);
+    $password = mysqli_real_escape_string($conn, $_POST["password"]);
+    $password_confirm = mysqli_real_escape_string($conn, $_POST["password_confirm"]);
 
-    // Check if the username already exists
-    $query = "SELECT * FROM `admin_db` WHERE username='$username'";
-    $result = mysqli_query($conn, $query);
-    if (mysqli_num_rows($result) > 0) {
-        // Username already exists, display an error message
-        echo "<script>alert('Username already exists')</script>";
+    // Validate username
+    if (empty($username)) {
+        echo "<script>alert('Username is required')</script>";
     } else {
-        // Username doesn't exist, proceed with the form
-        // Insert the data into the database
-        $sql = mysqli_query($conn, "INSERT into `admin_db`(username, password) values('$username', '$password')") or die('query failed');
-        if ($sql) {
-            header('location:signin_admin.php');
+        // Check if the username already exists
+        $query = "SELECT * FROM `admin_db` WHERE username='$username'";
+        $result = mysqli_query($conn, $query);
+        if (mysqli_num_rows($result) > 0) {
+            // Username already exists, display an error message
+            echo "<script>alert('Username already exists')</script>";
         } else {
-            die(mysqli_error($conn));
+            // Validate password
+            if (empty($password)) {
+                echo "<script>alert('Password is required')</script>";
+            } elseif ($password !== $password_confirm) {
+                echo "<script>alert('Passwords do not match')</script>";
+            } else {
+                // Password validation passed, proceed with the form
+                $hashedPassword = md5($password); // Encrypt the password with MD5
+
+                // Insert the data into the database
+                $sql = mysqli_query($conn, "INSERT into `admin_db`(username, password) values('$username', '$hashedPassword')") or die('query failed');
+                if ($sql) {
+                    header('location: signin_admin.php');
+                } else {
+                    die(mysqli_error($conn));
+                }
+            }
         }
     }
-    
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,16 +65,13 @@ if (isset($_POST['submit'])) {
         <div class="container form__section-container">
             <h2>Sign Up</h2>
             <div class="alert__message error">
-                <p>This is an error Message</p>
+                
             </div>
             <form action="" method="POST" enctype="multipart/form-data">
-                <input type="text" placeholder="Username" name="username">
-                <input type="password" placeholder="Password" name="password">
-                <input type="password" placeholder="Confirm password">
-                <div class="form__control">
-                    <label for="avatar"><h5>User avatar</h5></label>
-                    <input type="file" id="avatar" name="admin_avt">
-                </div>
+                <input type="text" placeholder="Username" name="username" required>
+                <input type="password" placeholder="Password" name="password" required>
+                <input type="password" placeholder="Confirm password" name="password_confirm" required>
+                
                 <button type="submit" class="btn btn-primary" name="submit">Sign Up</button>
                 <small><h5>Already have an account?</h5> <a href="signin.html">Sign In</a></small>
             </form>

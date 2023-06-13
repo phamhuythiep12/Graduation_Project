@@ -17,7 +17,7 @@ if (isset($_POST['submit'])) {
     $user_lastname = mysqli_real_escape_string($conn, $_POST['user_lastname']);
     $user_name = mysqli_real_escape_string($conn, $_POST['username']);
     $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
-    $user_password = mysqli_real_escape_string($conn, $_POST['user_password']);
+    $user_password = md5(mysqli_real_escape_string($conn, $_POST['user_password']));
 
 
     // Check if user uploaded a new avatar
@@ -104,12 +104,15 @@ if (isset($_POST['submit'])) {
             background-size: cover;
             background-position: center;
         }
+        .form__section{
+            margin-bottom: 400px;
+        }
     </style>
 </head>
 <body>
     <nav>
         <div class="container nav__container">
-            <a href="index.php"><h4>EK</h4></a>
+            <a href="course.php"><h4>EK</h4></a>
             <ul class="nav__menu">
                 <li><a href="course.php">Home</a></li>
                 <li><a href="course.php">Topics</a></li>

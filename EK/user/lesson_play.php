@@ -3,16 +3,28 @@
     session_start();
 
     $lesson_id = $_GET['learn'];
+    
 
     $sql = "SELECT * FROM lesson_db WHERE lesson_id = '$lesson_id'";
     $all_lessons = $conn -> query($sql);
     $row = mysqli_fetch_assoc($all_lessons);
 
+    $current_lesson_id = $row['lesson_id'];
+
     $sql_all_lessons = "SELECT * FROM lesson_db";
     $all_lessons_display = $conn -> query($sql_all_lessons);
 
 
+    $sql_all_flashcards = "SELECT * FROM flashcard_db WHERE lesson_id = '$lesson_id'";
+    $all_flashcards = $conn -> query($sql_all_flashcards);
+
+
+    
+
+
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,45 +43,271 @@
 
     <title>Lesson</title>   
     <style>
-        .right-sidebar {
-    margin-top: 20px;
+/* Default styles */
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 65% 30%;
+  grid-gap: 20px;
+  margin: 50px auto;
+}
+
+.left-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.video__container {
+  margin-bottom: 30px;
+}
+
+.play-container {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+}
+
+.video__row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 120%;
+  height: 100%;
+}
+
+.play-video {
+  margin-left: 50px;
+}
+
+.flashcard {
+  width: 250px;
+  height: 350px;
+  display: inline-block;
+  margin-right: 60px;
+  margin-bottom: 20px;
+  perspective: 1000px;
+  padding-left: 50px;
+  border-radius: 5px;
+}
+
+.flashcard:hover .front {
+  transform: rotateY(-180deg);
+}
+
+.flashcard:hover .back {
+  transform: rotateY(0deg);
+}
+
+.front,
+.back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  transition: transform 0.5s ease-in-out;
+}
+
+.front {
+  transform: rotateY(0deg);
+}
+
+.back {
+  transform: rotateY(180deg);
+  border: 1px solid white;
+  background-color: white;
+}
+
+.back p {
+  font-size: 30px;
+  margin-top: 150px;
+  text-align: center;
+  color: #222;
+}
+
+.flashcard img {
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.right-section {
+  display: flex;
+  flex-direction: column;
 }
 
 .side-video-list {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-
-    transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 20px;
 }
 
 .side-video-list:hover {
-    background-color: #e6e6e6;
+  background-color: #f9f9f9;
+  transform: scale(1.02);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-color: #ccc;
+  color: #222;
 }
 
 .side-video-list img {
-    width: 100px;
-    height: 60px;
-    margin-right: 10px;
-    border-radius: 3px;
+  width: 150px;
+  height: 100px;
+  margin-right: 15px;
+  border-radius: 3px;
+  object-fit: cover;
 }
 
 .vid-info {
-    flex: 1;
+  padding: 40px;
 }
 
-.vid-info strong {
-    display: block;
-    font-size: 16px;
-    margin-bottom: 5px;
+video {
+  width: 900px;
+  height: 500px;
 }
 
-.vid-info span {
-    font-size: 14px;
-    color: #666;
+.hidden{
+    display: none;
+}
+
+.save-button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  margin-left: 770px;
+}
+
+.save-button:hover {
+  background-color: #45a049;
+}
+
+
+/* Media Queries */
+
+@media screen and (max-width: 1024px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+  }
+  video {
+    width: 100%;
+    height: auto;
+  }
+
+  .flashcard {
+    height: 100px;
+  }
+
+  .back p {
+    font-size: 20px;
+  }
+
+  .side-video-list img {
+    width: 100px;
+    height: 75px;
+    margin-right: 10px;
+  }
+
+  .video__row {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80%;
+    height: 80%;
+  }
+
+  .play-container {
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  }
+
+  .vid-info {
+    padding: 20px;
+  }
+
+  .footer__container {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 2rem;
+    }
+
+    .footer__1 p {
+        margin: 1rem auto;
+    }
+
+    .footer_socials {
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 600px) {
+  
+  .grid-container {
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+  }
+
+  .flashcard {
+    height: 100px;
+  }
+  video {
+    width: 100%;
+    height: auto;
+  }
+
+  .back p {
+    font-size: 20px;
+  }
+
+  .side-video-list img {
+    width: 100px;
+    height: 75px;
+    margin-right: 10px;
+  }
+
+  .video__row {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80%;
+    height: 80%;
+  }
+
+  .play-container {
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  }
+
+  .vid-info {
+    padding: 20px;
+  }
+
+  .footer__container {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 2rem;
+    }
+
+    .footer__1 p {
+        margin: 1rem auto;
+    }
+
+    .footer_socials {
+        justify-content: center;
+    }
 }
 
     </style>
@@ -81,8 +319,36 @@
 
             <ul class="nav__menu">
                 <li><a href="course.php">Home</a></li>
+                <li><a href="ranking.php">Ranking</a></li>
                 <li><a href="search.php">Search</a></li>
-                <li><a href="profile.php">Profile</a></li>
+                <?php
+                    if(isset($_SESSION["username"])){
+                        $username = $_SESSION['username'];
+
+                        // Prepare and execute a database query to retrieve the user's information
+                        $query = "SELECT * FROM user_db WHERE username = ?";
+                        $stmt = $conn->prepare($query);
+                        $stmt->bind_param('s', $username);
+                        $stmt->execute();
+
+                        // Get the result
+                        $result = $stmt->get_result();
+
+                        // Check if a row was found
+                        if ($result->num_rows > 0) {
+                            // Fetch the row as an associative array
+                            $row_users = $result->fetch_assoc();
+
+                            // Retrieve the username from the row
+                            $usernameFromDB = $row_users['username'];
+                        echo "<li class='active'><a href='profile.php'>{$row_users['username']}</a></li>";
+                    } else {
+                        echo "User not found in the database.";
+                    }
+
+                    }
+                    
+                ?>
             </ul>
             <button id="open-menu-btn"><i class="uil uil-bars"></i></button>
             <button id="close-menu-btn"><i class="uil uil-multiply"></i></button>
@@ -90,103 +356,70 @@
     </nav>
 
 
-    <section>
-        <div class="video__container play-container">
-            <div class="video__row">
-                <div class="play-video">
-                <?php
-                echo "<h3 style='text-align:center;'>{$row['lesson_name']}</h3>";
-                echo "<video id='lesson-video' controls autoplay>
-                        <source src='../admin/uploads/{$row['lesson_video_url']}' type='video/mp4'>
-                        </video>";
-                        
-                ?>
-                
-
-                    <section class="faqs">
-                        <h2>Flashcards</h2>
-                        <div class="container faqs__container">
-                            <article class="faq">
-                                <div class="faq__icon"><i class="uil uil-plus"></i></div>
-                                <div class="question__answer">
-                                    <h4>Did it easy to learn?</h4>
-                                    <p>
-                                        The answer is yes. Our lessons contain videos and simple words so that children can easy to understand and learn-by-heart.
-                                    </p>
-                                </div>
-                            </article>
-                
-                            <article class="faq">
-                                <div class="faq__icon"><i class="uil uil-plus"></i></div>
-                                <div class="question__answer">
-                                    <h4>What's interesting?</h4>
-                                    <p>
-                                        The funny is that the flashcards your children have been collected and you can also check their English learning progress.
-                                    </p>
-                                </div>
-                            </article>
-                
-                            <article class="faq">
-                                <div class="faq__icon"><i class="uil uil-plus"></i></div>
-                                <div class="question__answer">
-                                    <h4>How many lessons do you have?</h4>
-                                    <p>
-                                        The content of our English learning page are very large content to your children to improve their English skill.
-                                    </p>
-                                </div>
-                            </article>
-                
-                            <article class="faq">
-                                <div class="faq__icon"><i class="uil uil-plus"></i></div>
-                                <div class="question__answer">
-                                    <h4>How much does each lesson cost?</h4>
-                                    <p>
-                                        It's 100% free.
-                                    </p>
-                                </div>
-                            </article>
-                
+    <div class="grid-container">
+    <div class="left-section">
+        <section>
+            <div class="video__container play-container">
+                <div class="video__row">
+                    <div class="play-video">
+                        <?php
                             
-                
-                        </div>
-                    </section>
-    
-                    <!--
-                    <div style="width:100%;display:flex;flex-direction:column;gap:8px;min-height:635px;">
-                        <iframe src="https://quizizz.com/embed/quiz/6280733df1f85d001e07191e" 
-                            title="animal vocabulary - Quizizz" style="flex:1;" frameBorder="0" allowfullscreen>
-                        </iframe>
-                    </div>
-                    -->
-                </div>
-
-
-                <?php
-                    while($row_display = mysqli_fetch_assoc($all_lessons_display)){
-                        
+                            echo "<video id='lesson-video' controls autoplay>
+                                <source src='../admin/uploads/{$row['lesson_video_url']}' type='video/mp4'>
+                                </video>";
+                            echo "<h3>{$row['lesson_name']}</h3>";
                         ?>
-                <?php
-                    echo" <div class='right-sidebar'>
-                    <a href='lesson_play.php?learn={$row_display['lesson_id']}'>
-                    
-                    <div class='side-video-list'>
-                        <img src='../admin/uploadsImageLesson/{$row_display['lesson_image_url']}' alt=''>
-                        <div class='vid-info'>
-                        <strong>{$row_display['lesson_name']}</strong>      
-                        </div>
                     </div>
-                    </a>  
-                    ";
-                    
-                ?>
-                <?php
-                    }
-                ?>
                 </div>
             </div>
-        </div>
-    </section>
-    
+
+
+            
+            <div class = "flashcard-container">
+                <h3 style='padding-left:50px; padding-bottom:30px;'>Flashcards:</h3>
+                <div id="myElement" class="hidden"><button class="save-button" onclick="saveLesson()">Save flashcards</button></div>
+                <?php
+                while ($row_all_flashcards = mysqli_fetch_assoc($all_flashcards)) {
+                echo "
+                <div class='flashcard'>
+                    <div class='front'>
+                        <img src='../admin/flashcards/{$row_all_flashcards['front_flashcard_url']}' alt='image'>
+                    </div>
+                    <div class='back'>
+                        <p id='word'>{$row_all_flashcards['back_flashcard_text']}</p>
+                    </div>
+                </div>";
+                }
+                ?>
+                
+            </div>
+            
+        </section>
+    </div>
+    <div class="right-section">
+        <section>
+            <?php
+                while($row_display = mysqli_fetch_assoc($all_lessons_display)){
+                    if ($row_display['lesson_id'] == $current_lesson_id) {
+                        continue;
+                    }
+                    
+                    echo" <div class='right-sidebar' id='lesson_list'>
+                        <a href='lesson_play.php?learn={$row_display['lesson_id']}'>
+                            <div class='side-video-list'>
+                                <img src='../admin/uploadsImageLesson/{$row_display['lesson_image_url']}' alt=''>
+                                <div class='vid-info'>
+                                    <strong>{$row_display['lesson_name']}</strong>      
+                                </div>
+                            </div>
+                        </a>  
+                    ";
+                }
+            ?>
+        </section>
+    </div>
+</div>
+
 
     <footer>
         <div class="container footer__container">
@@ -240,6 +473,69 @@
             </div> 
         </div>
     </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        
+        const cards = document.querySelectorAll('.flashcard');
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+            card.classList.toggle('clicked');
+            });
+        });
+        // Function to display the element after a delay
+        function displayElement() {
+        var element = document.getElementById("myElement");
+        element.style.display = "block";
+        }
+        // Set a delay of 60 seconds (60000 milliseconds) before displaying the element
+        setTimeout(displayElement, 5000);
+
+        function saveLesson(){
+            
+            
+
+            // Get all the flashcard data
+            var flashcards = [];
+            $('.flashcard').each(function() {
+            var frontUrl = $(this).find('.front img').attr('src');
+            var imageName = frontUrl.substring(frontUrl.lastIndexOf('/') + 1); // Extract the image name from the URL
+            var backText = $(this).find('.back #word').text();
+
+            // Create a flashcard object with the front image URL name and back text
+            var flashcard = {
+                frontUrl: imageName,
+                backText: backText
+            };
+
+            // Push the flashcard object to the array
+            flashcards.push(flashcard);
+        });
+
+        // Prepare the data to be sent in the AJAX request
+        var requestData = {
+            flashcards: flashcards
+        };
+
+            
+            $.ajax({
+            url: 'lesson_learned_logic.php',
+            method: 'POST',
+            data: requestData, // Send the requestData object
+            success: function(response) {
+                // Handle the response from the PHP script
+                console.log(response);
+                // You can perform additional actions here, such as displaying a success message
+                alert("Save successfully!!!");
+                
+            },
+            error: function(xhr, status, error) {
+                // Handle any errors that occur during the AJAX request
+                console.error(error);
+            }
+            });
+
+        }
+    </script>
 
     <script src="./main.js"></script>
 </body>

@@ -344,6 +344,7 @@ input, textarea, select{
 
 
 
+
 @media screen and (max-width: 1024px){
     .container{
         width:var(--container-width-md);
@@ -518,52 +519,3 @@ input, textarea, select{
 }
 
 
-/*lesson page*/
-.play-container{
-    padding-left: 2%;
-}
-
-.video__row{
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-
-}
-
-.play-video{
-    flex-basis: 69%;
-}
-
-.right-sidebar{
-    flex-basis: 30%;
-}
-
-.play-video video{
-    width: 100%;
-
-}
-
-.side-video-list{
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-}
-
-.side-video-list img{
-    width: 100%;
-}
-
-.side-video-list .small-thumbnail{
-    flex-basis: 49%;
-}
-
-.side-video-list .vid-info{
-    flex-basis: 49%;
-}
-
-.play-video h3{
-    font-weight: 600;
-    font-size: 22px;
-
-
-}

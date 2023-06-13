@@ -13,3 +13,17 @@ User: Login Sign up page
 todo 11/5:
 -create search page + quiz page
 -comment for lesson
+
+14/5/2023:
+- idea: show flashcards that student collected in the lesson.
+-how?
+
+
+15/5/2023:
+
+-idea: the flashcard after ? mins will appear the button collect flashcard. then 
+db name collected_flashcard_db contains: flashcard_id; user_id; ... created. and then in each user profile we can control
+user progress?
+
+29/5/23:
+-idea: Create leaderboard page and rank user by the collections of flashcard they collected

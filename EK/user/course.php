@@ -2,9 +2,7 @@
     include '../db_conn.php';
     session_start();
     
-    $sql = "SELECT * FROM user_db";
-    $all_users = $conn -> query($sql);
-    $row = mysqli_fetch_assoc($all_users);
+
 
     $sql_lesson = "SELECT * FROM lesson_db";
     $all_lessons = $conn -> query($sql_lesson);
@@ -100,6 +98,151 @@
 .article h2{
     margin-bottom: 2rem;
 }
+@media screen and (max-width: 1024px) {
+    .container {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .courses__container {
+        width: calc(50% - 2rem);
+        margin: 1rem;
+    }
+
+    .nav__menu {
+        right: 2rem;
+    }
+
+    header {
+        height: 80vh;
+    }
+
+    .header__container {
+        grid-template-columns: 1fr;
+        text-align: center;
+        margin-top: 3rem;
+    }
+
+    .header__left p {
+        margin-bottom: 1rem;
+    }
+
+    .courses__container {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .footer__container {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 2rem;
+    }
+
+    .footer__1 p {
+        margin: 1rem auto;
+    }
+
+    .footer_socials {
+        justify-content: center;
+    }
+
+    .course__image img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        margin-left: 0;
+    }
+
+    .course-info {
+        margin-left: 0;
+        padding: 1rem;
+    }
+
+    .course-info h4 {
+        margin-bottom: 0.5rem;
+    }
+
+    .course-info a {
+        display: inline-block;
+        margin-top: 0.5rem;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .container {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .courses__container {
+        width: calc(100% - 2rem);
+        margin: 1rem;
+    }
+
+    .nav__menu {
+        right: 2rem;
+    }
+
+    header {
+        height: 70vh;
+    }
+
+    .header__container {
+        grid-template-columns: 1fr;
+        text-align: center;
+        margin-top: 3rem;
+    }
+
+    .header__left p {
+        margin-bottom: 1rem;
+    }
+
+    .courses__container {
+        grid-template-columns: 1fr;
+    }
+
+    .course__image img{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+    .footer__container {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 2rem;
+    }
+
+    .footer__1 p {
+        margin: 1rem auto;
+    }
+
+    .footer_socials {
+        justify-content: center;
+    }
+
+    .course__image img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        margin-left: 0;
+    }
+
+    .course-info {
+        margin-left: 0;
+        padding: 1rem;
+    }
+
+    .course-info h4 {
+        margin-bottom: 0.5rem;
+    }
+
+    .course-info a {
+        display: inline-block;
+        margin-top: 0.5rem;
+    }
+}
+
+
 
 </style>
 
@@ -109,13 +252,35 @@
     <nav>
         <div class="container nav__container">
             <a href="course.php"><h4>EK</h4></a>
-            <ul class="nav__menu">
+                   <ul class="nav__menu">
                 <li><a href="course.php">Home</a></li>
-                <li><a href="contact.php">Contact</a></li>
+                <li><a href="ranking.php">Ranking</a></li>
+                <li><a href="search.php">Search</a></li>
                 
                 <?php
                     if(isset($_SESSION["username"])){
-                        echo "<li class='active'><a href='profile.php'>Welcome, {$_SESSION['username']}</a></li>";
+                        $username = $_SESSION['username'];
+
+                        // Prepare and execute a database query to retrieve the user's information
+                        $query = "SELECT * FROM user_db WHERE username = ?";
+                        $stmt = $conn->prepare($query);
+                        $stmt->bind_param('s', $username);
+                        $stmt->execute();
+
+                        // Get the result
+                        $result = $stmt->get_result();
+
+                        // Check if a row was found
+                        if ($result->num_rows > 0) {
+                            // Fetch the row as an associative array
+                            $row_users = $result->fetch_assoc();
+
+                            // Retrieve the username from the row
+                            $usernameFromDB = $row_users['username'];
+                        echo "<li class='active'><a href='profile.php'>Welcome, {$row_users['username']}</a></li>";
+                    } else {
+                        echo "User not found in the database.";
+                    }
 
                     }
                     
@@ -148,7 +313,7 @@
                     </div>
                     <div class='course-info'>
                         <h4>{$row_lessons['lesson_name']}</h4>
-                        <a href='lesson_play.php?learn=".$row_lessons['lesson_id']."' class='btn btn-primary' >Learn</a>
+                        <a href='lesson_play.php?learn=".$row_lessons['lesson_id']."' class='btn btn-primary'>Learn</a>
                     </div>
                 </article>
                 </div>
